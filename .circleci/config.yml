@@ -3,16 +3,17 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/python:3.7  # Use the CircleCI Docker image with AWS CLI
+      # - image: circleci/python:3.7  # Use the CircleCI Docker image with AWS CLI
+      - image: circleci/aws-cli@2.0.3  # Use the CircleCI Docker image with AWS CLI
 
     steps:
       - checkout  # Checkout the code from GitHub
 
       # Install AWS CLI
-      - run:
-          name: Install AWS CLI
-          command: |
-            sudo apt-get install -y awscli
+      # - run:
+      #     name: Install AWS CLI
+      #     command: |
+      #       sudo apt-get install -y awscli
 
 
       # Run AWS CLI command
