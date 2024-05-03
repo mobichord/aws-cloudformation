@@ -4,7 +4,7 @@ jobs:
   build:
     docker:
       # - image: circleci/python:3.7  # Use the CircleCI Docker image with AWS CLI
-      - image: circleci/aws-cli@2.0.3  # Use the CircleCI Docker image with AWS CLI
+      - image: cimg/aws:2024.03  # Use the CircleCI Docker image with AWS CLI
 
     steps:
       - checkout  # Checkout the code from GitHub
