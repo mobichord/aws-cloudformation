@@ -8,6 +8,13 @@ jobs:
     steps:
       - checkout  # Checkout the code from GitHub
 
+      # Install AWS CLI
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get install -y awscli
+
+
       # Run AWS CLI command
       - run:
           name: Deploy CloudFormation Stack
