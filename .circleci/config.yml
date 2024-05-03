@@ -12,7 +12,7 @@ jobs:
       - run:
           name: Deploy CloudFormation Stack
           command: |
-            aws cloudformation create-stack --stack-name BasicEC2 --template-body file://ec2/ec2-test.yml
+            aws cloudformation create-stack --stack-name BasicEC2 --template-body file://us-dev/ec2/ec2-test.yml
 
 workflows:
   version: 2
