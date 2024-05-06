@@ -1,0 +1,248 @@
+Transform: AWS::Serverless-2016-10-31
+Description: Managed Stack for aws-backend-vpc.
+
+Parameters:
+  vpcCidrBlock:
+    Type: String
+    Description: Designated CIDR block of VPC to be created.
+  privateSubnet1CidrBlock:
+    Type: String
+    Description: Designated CIDR block of aws-backend-private-subnet-1 to be created.
+  privateSubnet2CidrBlock:
+    Type: String
+    Description: Designated CIDR block of aws-backend-private-subnet-2 to be created.
+  publicSubnet1CidrBlock:
+    Type: String
+    Description: Designated CIDR block of aws-backend-public-subnet-1 to be created.
+  publicSubnet2CidrBlock:
+    Type: String
+    Description: Designated CIDR block of aws-backend-public-subnet-2 to be created.
+  privateSubnet1Az:
+    Type: String
+    Description: Designated availability zone of aws-backend-private-subnet-1 to be created.
+  privateSubnet2Az:
+    Type: String
+    Description: Designated availability zone of aws-backend-private-subnet-2 to be created.
+  publicSubnet1Az:
+    Type: String
+    Description: Designated availability zone of aws-backend-public-subnet-1 to be created.
+  publicSubnet2Az:
+    Type: String
+    Description: Designated availability zone of aws-backend-public-subnet-2 to be created.
+  vpcIdToPeer:
+    Type: String
+    Description: ID of the VPC to peer with.
+  privateIpToPeer:
+    Type: String
+    Description: Private IPv4 of the VPC to communicate with.
+  cidrBlockOfVpcToPeer:
+    Type: String
+    Description: CIDR block of the peered VPC to add for routing tables.
+  costCenterTag:
+    Type: String
+    Description: Used for tagging the resources created.
+    Default: AWSDevAccount
+  environmentTag:
+    Type: String
+    Description: Provide which environment this will be deployed. Used for tagging the resources created.
+
+Resources:
+  AwsBackendVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref vpcCidrBlock
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: aws-backend-vpc
+        - Key: CostCenter
+          Value: !Ref costCenterTag
+        - Key: Environment
+          Value: !Ref environmentTag
+
+  AwsBackendPrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref AwsBackendVpc
+      CidrBlock: !Ref privateSubnet1CidrBlock
+      AvailabilityZone: !Ref privateSubnet1Az
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: aws-backend-private-subnet-1
+        - Key: CostCenter
+          Value: !Ref costCenterTag
+        - Key: Environment
+          Value: !Ref environmentTag
+
+  AwsBackendPrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref AwsBackendVpc
+      CidrBlock: !Ref privateSubnet2CidrBlock
+      AvailabilityZone: !Ref privateSubnet2Az
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: aws-backend-private-subnet-2
+        - Key: CostCenter
+          Value: !Ref costCenterTag
+        - Key: Environment
+          Value: !Ref environmentTag
+
+  AwsBackendPublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref AwsBackendVpc
+      CidrBlock: !Ref publicSubnet1CidrBlock
+      AvailabilityZone: !Ref publicSubnet1Az
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: aws-backend-public-subnet-1
+        - Key: CostCenter
+          Value: !Ref costCenterTag
+        - Key: Environment
+          Value: !Ref environmentTag
+
+  AwsBackendPublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref AwsBackendVpc
+      CidrBlock: !Ref publicSubnet2CidrBlock
+      AvailabilityZone: !Ref publicSubnet2Az
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: aws-backend-public-subnet-2
+        - Key: CostCenter
+          Value: !Ref costCenterTag
+        - Key: Environment
+          Value: !Ref environmentTag
+
+  AwsBackendSecurityGroup1:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable access to NLB
+      VpcId: !Ref AwsBackendVpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+      Tags:
+      - Key: Name
+        Value: aws-backend-sg-1
+
+  AwsBackendSecurityGroup2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable access to Lambda
+      VpcId: !Ref AwsBackendVpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0" 
+      Tags:
+      - Key: Name
+        Value: aws-backend-sg-2
+  
+  AwsBackendVpcEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: !Ref AwsBackendVpc
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.execute-api"
+      VpcEndpointType: Interface
+      PrivateDnsEnabled: true
+      SubnetIds: 
+        - !Ref AwsBackendPublicSubnet1
+        - !Ref AwsBackendPublicSubnet2
+      SecurityGroupIds:
+        - !Ref AwsBackendSecurityGroup1
+
+  AwsBackendVpcPeeringConnection:
+    Type: AWS::EC2::VPCPeeringConnection
+    Properties:
+      VpcId: !Ref AwsBackendVpc
+      PeerVpcId: !Ref vpcIdToPeer
+      Tags:
+      - Key: Name
+        Value: aws-backend-vpc-peering
+
+  AwsBackendVpcRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref AwsBackendVpc
+      Tags:
+      - Key: Name
+        Value: aws-backend-vpc-route-table
+  
+  AwsBackendVpcRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref AwsBackendVpcRouteTable
+      DestinationCidrBlock: !Ref cidrBlockOfVpcToPeer
+      VpcPeeringConnectionId: !Ref AwsBackendVpcPeeringConnection
+
+  AwsBackendPrivateSubnet1Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref AwsBackendPrivateSubnet1
+      RouteTableId: !Ref AwsBackendVpcRouteTable
+
+  AwsBackendPrivateSubnet2Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref AwsBackendPrivateSubnet2
+      RouteTableId: !Ref AwsBackendVpcRouteTable
+
+Outputs:
+  AwsBackendVpcId:
+    Description: "The ID of the aws-backend-vpc."
+    Value: !Ref AwsBackendVpc
+    Export:
+      Name: 'AwsBackendVpcId'
+
+  AwsBackendPrivateSubnet1Id:
+    Description: "The ID of the aws-backend-private-subnet-1."
+    Value: !Ref AwsBackendPrivateSubnet1
+    Export:
+      Name: 'AwsBackendPrivateSubnet1Id'
+
+  AwsBackendPrivateSubnet2Id:
+    Description: "The ID of the aws-backend-private-subnet-2."
+    Value: !Ref AwsBackendPrivateSubnet2
+    Export:
+      Name: 'AwsBackendPrivateSubnet2Id'
+
+  AwsBackendPublicSubnet1Id:
+    Description: "The ID of the aws-backend-public-subnet-1."
+    Value: !Ref AwsBackendPublicSubnet1
+    Export:
+      Name: 'AwsBackendPublicSubnet1Id'
+
+  AwsBackendPublicSubnet2Id:
+    Description: "The ID of the aws-backend-public-subnet-2."
+    Value: !Ref AwsBackendPublicSubnet2
+    Export:
+      Name: 'AwsBackendPublicSubnet2Id'
+
+  AwsBackendSecurityGroup1Id:
+    Description: "The ID of the AwsBackendSecurityGroup1."
+    Value: !Ref AwsBackendSecurityGroup1
+    Export:
+      Name: 'AwsBackendSecurityGroup1Id'
+  
+  AwsBackendSecurityGroup2Id:
+    Description: "The ID of the AwsBackendSecurityGroup2."
+    Value: !Ref AwsBackendSecurityGroup2
+    Export:
+      Name: 'AwsBackendSecurityGroup2Id'
+
+  AwsBackendVpcEndpointId:
+    Description: "The ID of the AwsBackendVpcEndpoint."
+    Value: !Ref AwsBackendVpcEndpoint
+    Export:
+      Name: 'AwsBackendVpcEndpointId'
