@@ -13,23 +13,24 @@ jobs:
       - run:
           name: Deploy CloudFormation Stack
           command: |
-            aws cloudformation create-stack --stack-name BasicEC2 --template-body file://us-dev/ec2/ec2-test.yml
-            
-  approve_deletion:
-    type: approval
-
-  delete_stack:
-    docker:
-      - image: cimg/aws:2024.03
-      
-    steps:
-      - checkout
-      - run:
-          name: Delete CloudFormation Stack
-          command: |
             aws cloudformation delete-stack --stack-name BasicEC2
-            aws cloudformation wait stack-delete-complete --stack-name BasicEC2
-            echo "Stack deletion initiated."
+            #--template-body file://us-dev/ec2/ec2-test.yml
+
+  # approve_deletion:
+  #   type: approval
+
+  # delete_stack:
+  #   docker:
+  #     - image: cimg/aws:2024.03
+      
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Delete CloudFormation Stack
+  #         command: |
+  #           aws cloudformation delete-stack --stack-name BasicEC2
+  #           aws cloudformation wait stack-delete-complete --stack-name BasicEC2
+  #           echo "Stack deletion initiated."
 
 
 workflows:
@@ -38,6 +39,7 @@ workflows:
     jobs:
       - build
 
-      - delete_stack:
-          requires:
-            - approve_deletion
+      # - delete_stack:
+      #     requires:
+      #       - approve_deletion
+        
