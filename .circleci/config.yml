@@ -4,7 +4,7 @@ jobs:
   terraform_init:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/repo/us-dev/ec2
+    working_directory: ~/repo/us-dev/ec2/
     steps:
       - checkout
       - run:
@@ -14,7 +14,7 @@ jobs:
   terraform_fmt:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/repo/us-dev/ec2
+    working_directory: ~/repo/us-dev/ec2/
     steps:
       - checkout
       - run:
@@ -24,7 +24,7 @@ jobs:
   terraform_validate:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/repo/us-dev/ec2
+    working_directory: ~/repo/us-dev/ec2/
     steps:
       - checkout
       - run:
@@ -34,7 +34,7 @@ jobs:
   terraform_plan:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/repo/us-dev/ec2
+    working_directory: ~/repo/us-dev/ec2/
     steps:
       - checkout
       - run:
@@ -44,7 +44,7 @@ jobs:
   terraform_apply:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/repo/us-dev/ec2
+    working_directory: ~/repo/us-dev/ec2/
     steps:
       - checkout
       - run:
@@ -54,7 +54,7 @@ jobs:
   terraform_destroy:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/repo/us-dev/ec2
+    working_directory: ~/repo/us-dev/ec2/
     steps:
       - checkout
       - run:
