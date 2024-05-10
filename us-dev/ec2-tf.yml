@@ -1,0 +1,14 @@
+provider "aws" {
+  region  = "us-west-2"  # specify your desired region
+}
+
+resource "aws_instance" "test-instance" {
+  ami           = "ami-023e152801ee4846a"  # Example AMI, replace with your own
+  instance_type = "t2.micro"
+  subnet_id     = "subnet-ff395aa4"  # Replace with your subnet ID
+  vpc_security_group_ids = ["sg-09e90b917cdaf237b"]
+
+  tags = {
+    Name = "tf-test-instance"
+  }
+}
