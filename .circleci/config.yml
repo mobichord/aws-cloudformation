@@ -31,6 +31,16 @@ jobs:
           name: Validate Terraform Configuration
           command: terraform validate
 
+  terraform_plan:
+    docker:
+      - image: hashicorp/terraform:light
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Plan Terraform Changes
+          command: terraform plan -out=tfplan
+
   terraform_apply:
     docker:
       - image: hashicorp/terraform:light
@@ -39,7 +49,7 @@ jobs:
       - checkout
       - run:
           name: Apply Terraform
-          command: terraform apply -auto-approve
+          command: terraform apply -auto-approve tfplan
 
   terraform_destroy:
     docker:
@@ -62,9 +72,12 @@ workflows:
       - terraform_validate:
           requires:
             - terraform_fmt
-      - terraform_apply:
+      - terraform_plan:
           requires:
             - terraform_validate
+      - terraform_apply:
+          requires:
+            - terraform_plan
           filters:
             branches:
               only:
