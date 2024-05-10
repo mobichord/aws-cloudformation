@@ -68,7 +68,7 @@ workflows:
           filters:
             branches:
               only:
-                - main  # Apply only on commits to the main branch
+                - us-dev  # Apply only on commits to the main branch
 
   destroy:
     jobs:
