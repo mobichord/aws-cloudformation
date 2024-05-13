@@ -8,8 +8,7 @@ jobs:
       - checkout
       - run:
           name: Initialize Terraform
-          command: terraform init -chdir=~/project/us-dev/ec2
-
+          command: terraform -chdir=~/project/us-dev/ec2 init
   terraform_fmt:
     docker:
       - image: hashicorp/terraform:light
@@ -17,7 +16,7 @@ jobs:
       - checkout
       - run:
           name: Format Terraform Code
-          command: terraform fmt -check -chdir=~/project/us-dev/ec2
+          command: terraform -chdir=~/project/us-dev/ec2 fmt -check
 
   terraform_validate:
     docker:
@@ -36,7 +35,7 @@ jobs:
       - checkout
       - run:
           name: Plan Terraform Changes
-          command: terraform plan -out=tfplan -chdir=~/project/us-dev/ec2
+          command: terraform -chdir=~/project/us-dev/ec2 plan -out=tfplan
 
   terraform_apply:
     docker:
@@ -45,7 +44,7 @@ jobs:
       - checkout
       - run:
           name: Apply Terraform
-          command: terraform apply -auto-approve tfplan -chdir=~/project/us-dev/ec2
+          command: terraform -chdir=~/project/us-dev/ec2 apply -auto-approve tfplan
 
   terraform_destroy:
     docker:
