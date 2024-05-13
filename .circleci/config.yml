@@ -59,6 +59,9 @@ workflows:
   version: 2
   plan_and_apply:
     jobs:
+      - run:
+          name: Check Dir
+          command: ls -ltra
       - terraform_init
       - terraform_fmt:
           requires:
