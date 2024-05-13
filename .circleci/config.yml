@@ -31,7 +31,6 @@ jobs:
           name: Validate Terraform Configuration
           command: |
           echo "Working directory: $(pwd)"
-          ls -al
 
   terraform_plan:
     docker:
