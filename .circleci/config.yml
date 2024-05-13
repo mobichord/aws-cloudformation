@@ -25,8 +25,7 @@ jobs:
       - checkout
       - run:
           name: Validate Terraform Configuration
-          command: |
-          echo "Working directory: $(pwd)"
+          command: echo "Working directory: $(pwd)"
 
   terraform_plan:
     docker:
