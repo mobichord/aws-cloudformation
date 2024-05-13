@@ -55,13 +55,20 @@ jobs:
           name: Destroy Terraform Resources
           command: terraform destroy -auto-approve -chdir=~/project/us-dev/ec2
 
+  check_dir:
+    docker:
+      - image: hashicorp/terraform:light
+    steps:
+      - checkout
+      - run:
+          name: Check Dir
+          command: ls -ltra
+
 workflows:
   version: 2
   plan_and_apply:
     jobs:
-      - run:
-          name: Check Dir
-          command: ls -ltra
+      - check_dir
       - terraform_init
       - terraform_fmt:
           requires:
