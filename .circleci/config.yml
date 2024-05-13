@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Initialize Terraform
-          command: terraform init ~/project/us-dev/ec2
+          command: terraform init -chdir=~/project/us-dev/ec2
 
   terraform_fmt:
     docker:
@@ -17,7 +17,7 @@ jobs:
       - checkout
       - run:
           name: Format Terraform Code
-          command: terraform fmt -check ~/project/us-dev/ec2
+          command: terraform fmt -check -chdir=~/project/us-dev/ec2
 
   terraform_validate:
     docker:
@@ -36,7 +36,7 @@ jobs:
       - checkout
       - run:
           name: Plan Terraform Changes
-          command: terraform plan -out=tfplan ~/project/us-dev/ec2
+          command: terraform plan -out=tfplan -chdir=~/project/us-dev/ec2
 
   terraform_apply:
     docker:
@@ -45,7 +45,7 @@ jobs:
       - checkout
       - run:
           name: Apply Terraform
-          command: terraform apply -auto-approve tfplan ~/project/us-dev/ec2
+          command: terraform apply -auto-approve tfplan -chdir=~/project/us-dev/ec2
 
   terraform_destroy:
     docker:
@@ -54,7 +54,7 @@ jobs:
       - checkout
       - run:
           name: Destroy Terraform Resources
-          command: terraform destroy -auto-approve ~/project/us-dev/ec2
+          command: terraform destroy -auto-approve -chdir=~/project/us-dev/ec2
 
 workflows:
   version: 2
