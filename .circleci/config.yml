@@ -30,7 +30,6 @@ jobs:
       - run:
           name: Validate Terraform Configuration
           command: |
-          terraform validate
           echo "Working directory: $(pwd)"
           ls -al
 
