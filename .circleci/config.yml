@@ -4,27 +4,24 @@ jobs:
   terraform_init:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/project/us-dev/ec2
     steps:
       - checkout
       - run:
           name: Initialize Terraform
-          command: terraform init
+          command: terraform init ~/project/us-dev/ec2
 
   terraform_fmt:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/project/us-dev/ec2
     steps:
       - checkout
       - run:
           name: Format Terraform Code
-          command: terraform fmt -check
+          command: terraform fmt -check ~/project/us-dev/ec2
 
   terraform_validate:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/project/us-dev/ec2
     steps:
       - checkout
       - run:
@@ -35,32 +32,29 @@ jobs:
   terraform_plan:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/project/us-dev/ec2
     steps:
       - checkout
       - run:
           name: Plan Terraform Changes
-          command: terraform plan -out=tfplan
+          command: terraform plan -out=tfplan ~/project/us-dev/ec2
 
   terraform_apply:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/project/us-dev/ec2
     steps:
       - checkout
       - run:
           name: Apply Terraform
-          command: terraform apply -auto-approve tfplan
+          command: terraform apply -auto-approve tfplan ~/project/us-dev/ec2
 
   terraform_destroy:
     docker:
       - image: hashicorp/terraform:light
-    working_directory: ~/project/us-dev/ec2
     steps:
       - checkout
       - run:
           name: Destroy Terraform Resources
-          command: terraform destroy -auto-approve
+          command: terraform destroy -auto-approve ~/project/us-dev/ec2
 
 workflows:
   version: 2
