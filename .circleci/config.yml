@@ -26,11 +26,3 @@ workflows:
             branches:
               only:
                 - us-dev  # Apply only on commits to the main branch
-
-  destroy:
-    jobs:
-      - terraform_destroy:
-          filters:
-            branches:
-              only:
-                - destroy  # Run destroy job only when pushing to a branch named "destroy"
