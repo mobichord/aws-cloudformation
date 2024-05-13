@@ -9,12 +9,11 @@ jobs:
       - run:
           name: Initialize Terraform
           command: |
-            cd ./us-dev/ec2
-            terraform init
-            terraform -check
-            terraform -out=tfplan
-            terraform -auto-approve tfplan
-            terraform destroy -auto-approve
+            terraform -chdir=./us-dev/ec2 init
+            terraform -chdir=./us-dev/ec2 -check
+            terraform -chdir=./us-dev/ec2 -out=tfplan
+            terraform -chdir=./us-dev/ec2 -auto-approve tfplan
+            terraform -chdir=./us-dev/ec2 destroy -auto-approve
 
 
 workflows:
