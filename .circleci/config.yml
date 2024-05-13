@@ -7,7 +7,6 @@ jobs:
     working_directory: ~/project/us-dev/ec2
     steps:
       - checkout
-        - 
       - run:
           name: Initialize Terraform
           command: terraform init
