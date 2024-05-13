@@ -1,87 +1,27 @@
 version: 2.1
 
 jobs:
-  terraform_init:
+  terraform:
     docker:
       - image: hashicorp/terraform:light
     steps:
       - checkout
       - run:
           name: Initialize Terraform
-          command: terraform -chdir=./us-dev/ec2 init
-  terraform_fmt:
-    docker:
-      - image: hashicorp/terraform:light
-    steps:
-      - checkout
-      - run:
-          name: Format Terraform Code
-          command: terraform -chdir=./us-dev/ec2 fmt -check
-
-  terraform_validate:
-    docker:
-      - image: hashicorp/terraform:light
-    steps:
-      - checkout
-      - run:
-          name: Validate Terraform Configuration
           command: |
-            echo "Working directory: $(pwd)"
+            cd ./us-dev/ec2
+            terraform init
+            terraform -check
+            terraform -out=tfplan
+            terraform -auto-approve tfplan
+            terraform destroy -auto-approve
 
-  terraform_plan:
-    docker:
-      - image: hashicorp/terraform:light
-    steps:
-      - checkout
-      - run:
-          name: Plan Terraform Changes
-          command: terraform -chdir=./us-dev/ec2 plan -out=tfplan
-
-  terraform_apply:
-    docker:
-      - image: hashicorp/terraform:light
-    steps:
-      - checkout
-      - run:
-          name: Apply Terraform
-          command: terraform -chdir=./us-dev/ec2 apply -auto-approve tfplan
-
-  terraform_destroy:
-    docker:
-      - image: hashicorp/terraform:light
-    steps:
-      - checkout
-      - run:
-          name: Destroy Terraform Resources
-          command: terraform -chdir=./us-dev/ec2 destroy -auto-approve
-
-  check_dir:
-    docker:
-      - image: hashicorp/terraform:light
-    steps:
-      - checkout
-      - run:
-          name: Check Dir
-          command: ls -ltra
 
 workflows:
   version: 2
   plan_and_apply:
     jobs:
-      - check_dir
-      - terraform_init
-      - terraform_fmt:
-          requires:
-            - terraform_init
-#      - terraform_validate:
-#          requires:
-#            - terraform_fmt
-      - terraform_plan:
-          requires:
-            - terraform_fmt
-      - terraform_apply:
-          requires:
-            - terraform_plan
+      - terraform:
           filters:
             branches:
               only:
