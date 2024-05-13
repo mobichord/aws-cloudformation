@@ -76,7 +76,7 @@ workflows:
 #      - terraform_validate:
 #          requires:
 #            - terraform_fmt
-      - terraform_plan:
+      - terraform_plan
 #          requires:
 #            - terraform_validate
       - terraform_apply:
