@@ -12,22 +12,11 @@ jobs:
           path: ./us-dev/ec2
       - terraform/validate:
           path: ./us-dev/ec2
-          checkout: true
-          context: terraform
-          requires:
-            - terraform/fmt
           persist-workspace: true
       - terraform/plan:
           path: ./us-dev/ec2
-          persist-workspace: true
-          requires:
-          - terraform/validate
       - terraform/apply:
           path: ./us-dev/ec2
-          attach-workspace: true
-          filters:
-            branches:
-              only: us-dev
       - terraform/destroy:
           path: ./us-dev/ec2
     working_directory: ~/project
