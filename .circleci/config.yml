@@ -9,22 +9,22 @@ workflows:
     - terraform/init:
         path: ./us-dev/ec2
         checkout: true
-        context: terraform
+        context: cloudformation
     - terraform/validate:
         path: ./us-dev/ec2
         checkout: true
-        context: terraform
+        context: cloudformation
     - terraform/plan:
         path: ./us-dev/ec2
         checkout: true
-        context: terraform
+        context: cloudformation
         persist-workspace: true
         requires:
         - terraform/validate
     - terraform/apply:
         path: ./us-dev/ec2
         attach-workspace: true
-        context: terraform
+        context: cloudformation
         filters:
           branches:
             only: us-dev
