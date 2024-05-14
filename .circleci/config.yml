@@ -36,6 +36,11 @@ workflows:
             - terraform/plan
       - terraform/destroy:
           path: ./us-dev/ec2
+          attach-workspace: true
+          context: terraform
+          filters:
+            branches:
+              only: us-dev
     # working_directory: ~/project
 
       # - single-job-lifecycle
