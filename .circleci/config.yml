@@ -27,6 +27,6 @@ workflows:
         context: cloudformation
         filters:
           branches:
-            only: us-dev
+            only: main
         requires:
         - terraform/plan
