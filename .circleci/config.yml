@@ -12,6 +12,7 @@ jobs:
           path: ./us-dev/ec2
       - terraform/init:
           path: ./us-dev/ec2
+          persist-workspace: true
       - terraform/plan:
           path: ./us-dev/ec2
           persist-workspace: true
