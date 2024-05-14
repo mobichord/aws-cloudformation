@@ -7,20 +7,24 @@ workflows:
   deploy_infra:
     jobs:
     - terraform/init:
-        path: ./us-dev/ec2
+        chdir: ./us-dev/ec2
         checkout: true
+        context: terraform
     - terraform/validate:
-        path: ./us-dev/ec2
+        chdir: ./us-dev/ec2
         checkout: true
+        context: terraform
     - terraform/plan:
-        path: ./us-dev/ec2
+        chdir: ./us-dev/ec2
         checkout: true
+        context: terraform
         persist-workspace: true
         requires:
         - terraform/validate
     - terraform/apply:
-        path: ./us-dev/ec2
+        chdir: ./us-dev/ec2
         attach-workspace: true
+        context: terraform
         filters:
           branches:
             only: master
