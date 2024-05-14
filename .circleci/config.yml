@@ -6,18 +6,16 @@ jobs:
     executor: terraform/default
     steps:
       - checkout
+      - terraform/init:
+          path: ./us-dev/ec2
       - terraform/fmt:
           path: ./us-dev/ec2
-          checkout: true
-          context: terraform
       - terraform/validate:
           path: ./us-dev/ec2
           checkout: true
           context: terraform
           requires:
             - terraform/fmt
-      - terraform/init:
-          path: ./us-dev/ec2
           persist-workspace: true
       - terraform/plan:
           path: ./us-dev/ec2
