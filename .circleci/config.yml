@@ -27,6 +27,6 @@ workflows:
         context: terraform
         filters:
           branches:
-            only: master
+            only: us-dev
         requires:
         - terraform/plan
