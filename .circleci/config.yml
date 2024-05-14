@@ -1,46 +1,28 @@
+---
+# https://circleci.com/developer/orbs/orb/circleci/terraform
 version: '2.1'
 orbs:
-  terraform: circleci/terraform@3.1
+  terraform: circleci/terraform@1.2.1
 workflows:
-  single-job-lifecycle:
+  deploy_infra:
     jobs:
-      - terraform/fmt:
-          path: ./us-dev/ec2
-          checkout: true
-          context: terraform
-      - terraform/validate:
-          path: ./us-dev/ec2
-          checkout: true
-          context: terraform
-          requires:
-            - terraform/fmt
-      - terraform/init:
-          path: ./us-dev/ec2
-          checkout: true
-          context: terraform
-      - terraform/plan:
-          path: ./us-dev/ec2
-          checkout: true
-          context: terraform
-          persist-workspace: true
-          requires:
-            - terraform/validate
-      - terraform/apply:
-          path: ./us-dev/ec2
-          attach-workspace: true
-          context: terraform
-          filters:
-            branches:
-              only: us-dev
-          requires:
-            - terraform/plan
-      - terraform/destroy:
-          path: ./us-dev/ec2
-          attach-workspace: true
-          context: terraform
-          filters:
-            branches:
-              only: us-dev
-    # working_directory: ~/project
-
-      # - single-job-lifecycle
+    - terraform/validate:
+        path: ./us-dev/ec2
+        checkout: true
+        context: terraform
+    - terraform/plan:
+        path: ./us-dev/ec2
+        checkout: true
+        context: terraform
+        persist-workspace: true
+        requires:
+        - terraform/validate
+    - terraform/apply:
+        path: ./us-dev/ec2
+        attach-workspace: true
+        context: terraform
+        filters:
+          branches:
+            only: master
+        requires:
+        - terraform/plan
