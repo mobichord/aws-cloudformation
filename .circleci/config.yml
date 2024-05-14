@@ -2,27 +2,27 @@
 # https://circleci.com/developer/orbs/orb/circleci/terraform
 version: '2.1'
 orbs:
-  terraform: circleci/terraform@1.2.1
+  terraform: circleci/terraform@3.1
 workflows:
   deploy_infra:
     jobs:
     - terraform/init:
-        chdir: ./us-dev/ec2
+        path: ./us-dev/ec2
         checkout: true
         context: terraform
     - terraform/validate:
-        chdir: ./us-dev/ec2
+        path: ./us-dev/ec2
         checkout: true
         context: terraform
     - terraform/plan:
-        chdir: ./us-dev/ec2
+        path: ./us-dev/ec2
         checkout: true
         context: terraform
         persist-workspace: true
         requires:
         - terraform/validate
     - terraform/apply:
-        chdir: ./us-dev/ec2
+        path: ./us-dev/ec2
         attach-workspace: true
         context: terraform
         filters:
