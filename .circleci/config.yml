@@ -6,6 +6,10 @@ orbs:
 workflows:
   deploy_infra:
     jobs:
+    - terraform/init:
+        path: ./us-dev/ec2
+        checkout: true
+        context: terraform
     - terraform/validate:
         path: ./us-dev/ec2
         checkout: true
