@@ -10,19 +10,16 @@ jobs:
           path: ./us-dev/ec2
       - terraform/validate:
           path: ./us-dev/ec2
-          context: terraform
       - terraform/init:
           path: ./us-dev/ec2
       - terraform/plan:
           path: ./us-dev/ec2
-          context: terraform
           persist-workspace: true
           requires:
           - terraform/validate
       - terraform/apply:
           path: ./us-dev/ec2
           attach-workspace: true
-          context: terraform
           filters:
             branches:
               only: us-dev
