@@ -36,6 +36,6 @@ workflows:
             - terraform/plan
       - terraform/destroy:
           path: ./us-dev/ec2
-    working_directory: ~/project
+    # working_directory: ~/project
 
       # - single-job-lifecycle
