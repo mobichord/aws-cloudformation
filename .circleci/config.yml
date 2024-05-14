@@ -1,0 +1,32 @@
+---
+# https://circleci.com/developer/orbs/orb/circleci/terraform
+version: '2.1'
+orbs:
+  terraform: circleci/terraform@3.1
+workflows:
+  deploy_infra:
+    jobs:
+    - terraform/init:
+        path: ./us-dev/ec2
+        checkout: true
+        context: cloudformation
+    - terraform/validate:
+        path: ./us-dev/ec2
+        checkout: true
+        context: cloudformation
+    - terraform/plan:
+        path: ./us-dev/ec2
+        checkout: true
+        context: cloudformation
+        persist-workspace: true
+        requires:
+        - terraform/validate
+    - terraform/apply:
+        path: ./us-dev/ec2
+        attach-workspace: true
+        context: cloudformation
+        filters:
+          branches:
+            only: main
+        requires:
+        - terraform/plan
