@@ -39,5 +39,7 @@ workflows:
     - terraform/destroy:
         name: "Destroy"
         path: ./us-dev/ec2
+        attach-workspace: true
+        context: cloudformation
         requires:
           - "Hold for manual approval before destroy"
