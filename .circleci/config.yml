@@ -30,3 +30,14 @@ workflows:
             only: main
         requires:
         - terraform/plan
+    
+    - hold:
+          type: approval
+          name: "Hold for manual approval before destroy"
+          requires:
+            - terraform/apply
+      - terraform/destroy:
+          name: "Destroy"
+          path: ./us-dev/ec2
+          requires:
+            - "Hold for manual approval before destroy"
